@@ -1,0 +1,35 @@
+package l2_analizador;
+
+import java_cup.runtime.Symbol;
+
+%%
+%cup
+%public
+%full
+
+%char
+%ignorecase
+%eofval{
+        return new Symbol(sym.EOF ,new String("Fin del Archivo"));
+%eofval}
+%linea
+BINARIO = ([0-1])
+NUM = ([2-9])
+LETRA=([a-z])
+
+%%
+
+" " {return new Symbol(sym.ESPACIO, new String(yytext()));}
+"#" {return new Symbol(sym.COMENTARIO, new String(yytext()));}
+"(" {return new Symbol(sym.APARTENTESIS, new String(yytext()));}
+")" {return new Symbol(sym.CPARTENTESIS, new String(yytext()));}
+"+" {return new Symbol(sym.UNION, new String(yytext()));}
+"*" {return new Symbol(sym.CLAUSURA, new String(yytext()));}
+"." {return new Symbol(sym.CONCATENACION, new String(yytext()));}
+{BINARIO} {return new Symbol(sym.BINARIO, new String(yytext()));}
+{NUM} {return new Symbol(sym.NUM, new String(yytext()));}
+{LETRA} {return new Symbol(sym.LETRA, new String(yytext()));}
+
+. {System.out.print(" #ERROR#"); }
+
+

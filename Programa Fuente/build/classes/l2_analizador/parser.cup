@@ -1,0 +1,46 @@
+package l2_analizador;
+
+import java.io.*;
+import java.util.*;
+import java_cup.runtime.*;
+
+action code
+{:
+:}
+
+parser code
+{:
+    public static void main(String args[]) throws Exception{      
+        new parser(new Yylex(new FileInputStream(args[0]))).parse();
+        
+    }
+
+    public static void cargar(String Archivo) throws Exception{      
+        new parser(new Yylex(new FileInputStream(Archivo))).parse();
+    }
+
+:};
+
+terminal BINARIO, NUM, APARTENTESIS, CPARTENTESIS, UNION, CLAUSURA, CONCATENACION, ESPACIO, LETRA, COMENTARIO;
+non terminal INICIO, ER, FR;
+
+precedence left CLAUSURA, CONCATENACION, UNION;
+precedence left COMENTARIO;
+
+start with INICIO;
+INICIO::= ER
+        ;
+ER::= APARTENTESIS {:System.out.print(" /Abre Parent./ "); :} ER CPARTENTESIS {:System.out.print(" /Cierra Parent./ "); :} ER
+    | ER CLAUSURA {:System.out.print(" /Clausura/ "); :} ER
+    | ER UNION {:System.out.print(" /Union/ "); :} ER
+    | ER CONCATENACION {:System.out.print(" /Concatenacion/ "); :} ER
+    | BINARIO {:System.out.print(" /Digito/ "); :}
+    | BINARIO COMENTARIO FR{:System.out.print(" /Digito/ "); :}
+    | COMENTARIO FR
+    |
+;
+FR::= LETRA FR
+    | NUM FR
+    | BINARIO FR
+    | ESPACIO FR
+    | COMENTARIO ER;
